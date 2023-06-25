@@ -1,0 +1,443 @@
+﻿@using Microsoft.AspNetCore.Html;
+@using OVERTIME.MANAGER.MAIN.ViewModels;
+@using X.PagedList.Mvc.Core
+@using OVERTIME.MANAGER.MAIN.Utils.Enums;
+@model ListItem<Overtime>
+
+@{
+    ViewData["Title"] = "MAIN";
+    Layout = "_LayoutDefault";
+    var navigatorActive = new NavigatorActive { navigatorActive = "Index" };
+    OvertimeManagerContext db = new OvertimeManagerContext();
+    var temp = db.Overtimes.ToList();
+}
+
+@{
+    // Hàm định dạng ngày
+    IHtmlContent formatDate(DateTime item)
+    {
+        string resultDate = item.Day.ToString().Length > 1 ? item.Day.ToString() : "0" + item.Day.ToString();
+        string resultMonth = item.Month.ToString().Length > 1 ? item.Month.ToString() : "0" + item.Month.ToString();
+        string resultYear = item.Year.ToString();
+        string resultHour = item.Hour.ToString().Length > 1 ? item.Hour.ToString() : "0" + item.Hour.ToString();
+        string resultMinute = item.Minute.ToString().Length > 1 ? item.Minute.ToString() : "0" + item.Minute.ToString();
+        string result = resultDate + "/" + resultMonth + "/" + resultYear + " " + resultHour + ":" + resultMinute;
+        return Html.Raw($@"<span>{result}</span>");
+    }
+    // Hàm định dạng trạng thái
+    IHtmlContent formatStatus(int status)
+    {
+        if (status == (int)OvertimeStatus.pending)
+        {
+            return Html.Raw("<span class=\"overtime-status pending\">Pending</span>");
+        }
+        else if (status == (int)OvertimeStatus.approved)
+        {
+            return Html.Raw("<span class=\"overtime-status approved\">Approved</span>");
+        }
+        else if (status == (int)OvertimeStatus.refused)
+        {
+            return Html.Raw("<span class=\"overtime-status refused\">Refused</span>");
+        }
+        return Html.Raw("<span>--</span>");
+    }
+}
+
+@section header
+    {
+    <partial name="~/Views/OvertimeManager/_HeaderOM.cshtml" model="navigatorActive" />
+}
+
+@section link {
+    <link rel="stylesheet" href="../assets/components/overtime/css/style.css" />
+}
+
+@await Html.PartialAsync("DialogPartial", new DialogInformation {
+    title = "Delete overtime",
+    description = "",
+    negativeButton = "Cancel",
+    positiveButton = "Delete",
+    negativeColor = "btn-secondary",
+    positiveColor = "btn-danger"
+})
+
+@await Html.PartialAsync("ToastPartial", new ToastInformation {
+    type = "success",
+    message = "Delete successful!",
+})
+
+<main class="container-fluid overtime-main">
+    <div class="overtime-wrapper py-3">
+        <!-- Heading -->
+        <div class="overtime-heading d-flex align-items-center justify-content-between pb-3">
+            <div class="fs-5 fw-bold">Register Overtime</div>
+            <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                <a type="button" class="btn btn-primary btn-add" asp-controller="OvertimeManager" asp-action="OvertimeAdd">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add</span>
+                </a>
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop">
+                        <a class="dropdown-item" href="#">
+                            <i class="fa-solid fa-file-import"></i>
+                            <span class="ml-8">Import</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="overtime-content flex-row align-items-center justify-content-between">
+            <!-- Toolbar khi chưa tick -->
+            <div class="row overtime-toolbar overtime-toolbar-show align-items-center justify-content-between">
+                <div class="col-5 col-md-6 overtime-toolbar-left input-group">
+                    <input type="text" name="searchQuery" class="form-control overtime-search" placeholder="Search" value="@Model.searchQuery" />
+                </div>
+
+                <div class="col-7 col-md-6 justify-content-end overtime-toolbar-right d-flex align-items-center">
+                    <div class="d-flex align-items-center status-wrapper">
+                        <span>Status</span>
+                        <select class="form-select status-overtime-sort" name="status" asp-for="status" asp-items="@ViewBag.Statuses">
+                        </select>
+                    </div>
+
+                    <a href="OvertimeManager?searchQuery=@Model.searchQuery&pageIndex=@Model.pageIndex&pageSize=@Model.pageSize&status=@Model.status" class="btn btn-outline-primary mr-8" type="button">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </a>
+
+                    <button class="btn btn-outline-primary mr-8 btn-overtime-export" type="button">
+                        <i class="fa-solid fa-file-export"></i>
+                    </button>
+
+                    <button class="btn btn-outline-primary" type="button">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Toolbar khi đã tick -->
+            <div class="row overtime-toolbar overtime-toolbar-hide">
+                <div class="col-12 col-md-12 align-items-center input-group">
+                    <span>Selected <b class="selectedItem">0</b></span>
+                    <span class="unselect-all">Unselect</span>
+                    <button class="btn btn-outline-warning mr-8 btn-hide-refuse" type="button">
+                        <i class="fa-solid fa-ban"></i>
+                        Refuse
+                    </button>
+                    <button class="btn btn-outline-success mr-8 btn-hide-approve" type="button">
+                        <i class="fa-regular fa-circle-check"></i>
+                        Approve
+                    </button>
+                    <button class="btn btn-outline-primary mr-8 btn-hide-export" type="button">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        Export
+                    </button>
+                    <button class="btn btn-outline-danger mr-8 btn-hide-delete" type="button">
+                        <i class="fa-solid fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="overtime-table">
+                @if (Model.totalRecord > 0)
+                {
+                    <table class="table table-hover">
+                        <thead class="unselect">
+                            <tr>
+                                <th>
+                                    <input type="checkbox" />
+                                </th>
+                                <th width="140px">Employee Code</th>
+                                <th width="180px">Employee Name</th>
+                                <th width="120px">JobPosition</th>
+                                <th width="140px">Organization</th>
+                                <th class="text-center">Apply Date</th>
+                                <th class="text-center">From Date</th>
+                                <th class="text-center">To Date</th>
+                                <th>OW</th>
+                                <th>WorkingShift</th>
+                                <th>Reason</th>
+                                <th>Approval</th>
+                                <th>Description</th>
+                                <th class="text-center">Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.list)
+                            {
+                                <tr>
+                                    <td>
+                                        <input my-data="@item.OverTimeId" type="checkbox" />
+                                    </td>
+                                    <td>@item.EmployeeCode</td>
+                                    <td>@item.EmployeeName</td>
+                                    <td>@item.JobPositionName</td>
+                                    <td>@item.OrganizationName</td>
+                                    <td class="text-center">@formatDate(@item.ApplyDate)</td>
+                                    <td class="text-center">@formatDate(@item.FromDate)</td>
+                                    <td class="text-center">@formatDate(@item.ToDate)</td>
+                                    <td>@item.OverTimeInWorkingShiftName</td>
+                                    <td>@item.WorkingShiftName</td>
+                                    <td>@item.Reason</td>
+                                    <td>@item.ApprovalName</td>
+                                    <td>@item.Dsc</td>
+                                    <td class="text-center">@formatStatus(@item.StatusOvertime)</td>
+                                    <td class="overtime-action-wrapper">
+                                        <a class="overtime-action" asp-action="OvertimeUpdate" asp-route-isDuplicate="@true" asp-route-overtimeId="@item.OverTimeId">
+                                            <i class="fa-regular fa-clipboard"></i>
+                                        </a>
+                                        <a class="overtime-action" asp-controller="OvertimeManager" asp-action="OvertimeDetail" asp-route-overtimeId="@item.OverTimeId">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </a>
+                                        <a class="overtime-action delete" data-employee="@item.EmployeeName" data-overtimeId="@item.OverTimeId" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            <i data-employee="@item.EmployeeName" data-overtimeId="@item.OverTimeId" class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="no-data">No data to display</div>
+                }
+            </div>
+
+            <!-- Pagination-->
+            <div class="overtime-pagination d-flex align-items-center justify-content-between">
+                <div class="pagination-total">Total records: <b>@Model.totalRecord</b></div>
+                <div class="pagination-paging d-flex align-items-center">
+                    <div class="dropdown mr-20">
+                        <select class="form-select pageSize-navigation" name="pageSize" asp-for="pageSize" asp-items="@ViewBag.PageSizes">
+                        </select>
+                    </div>
+                    @Html.PagedListPager(Model.list, page => Url.Action("Index", new {pageIndex=page, pageSize=Model.pageSize, searchQuery=Model.searchQuery, status=Model.status}))
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section script {
+    <script src="../assets/components/overtime/js/script.js"></script>
+    <script>
+        // Focus vào input search khi vừa vào trang - nnhiep
+        document.querySelector('.overtime-search')?.focus();
+
+        // Ẩn/Hiển thị toolbar khi click chọn ít nhất một hàng bất kỳ - nnhiep
+        document.querySelector('.overtime-table thead tr th:first-child')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.querySelector('.overtime-toolbar-show').style.display = 'none';
+                document.querySelector('.overtime-toolbar-hide').style.display = 'flex';
+            } else {
+                document.querySelector('.overtime-toolbar-hide').style.display = 'none';
+                document.querySelector('.overtime-toolbar-show').style.display = 'flex';
+            }
+        })
+
+        // Lắng nghe thay đổi số bản ghi một trang - nnhiep
+        document.querySelector('.pageSize-navigation')?.addEventListener('change', (e) => {
+            var searchQuery = '@(Model.searchQuery)';
+            window.location.href = `/OvertimeManager?pageIndex=1&pageSize=${e.target.value}&searchQuery=${searchQuery}&status=${@Model.status}`;
+        })
+
+        // Lắng nghe thay đổi trạng thái đơn làm thêm
+        document.querySelector('.status-overtime-sort')?.addEventListener('change', (e) => {
+            var searchQuery = '@(Model.searchQuery)';
+            let status = Number.parseInt(e.target.value);
+            window.location.href = `/OvertimeManager?pageIndex=1&pageSize=${@Model.pageSize}&searchQuery=${searchQuery}&status=${status}`;
+        })
+
+        let selectedData = [];
+
+        // Xử lý tick chọn hết trong table - nnhiep
+        let checkAll = document.querySelector('.overtime-table table thead th:first-child input');
+        checkAll?.addEventListener('change', (e) => {
+            document.querySelectorAll('.overtime-table table tbody td:first-child input').forEach(item => {
+                let selectedKey = item.getAttribute("my-data");
+                item.checked = checkAll.checked;
+                if (checkAll.checked) {
+                    if (selectedData.indexOf(selectedKey) == -1) {
+                        selectedData.push(selectedKey);
+                    }
+                } else {
+                    selectedData = selectedData.filter(item => item !== selectedKey);
+                }
+            });
+            document.querySelector('.selectedItem').innerHTML = selectedData.length;
+        });
+
+        // Xử lý bỏ chọn hết - nnhiep
+        document.querySelector('.unselect-all')?.addEventListener('click', () => {
+            document.querySelectorAll('.overtime-table table tbody td:first-child input').forEach(item => {
+                let selectedKey = item.getAttribute("my-data");
+                item.checked = false;
+            });
+            checkAll.checked = false;
+            selectedData = [];
+            document.querySelector('.selectedItem').innerHTML = 0;
+            document.querySelector('.overtime-toolbar-hide').style.display = 'none';
+            document.querySelector('.overtime-toolbar-show').style.display = 'flex';
+        });
+
+        // Xử lý tick chọn table - nnhiep
+        document.querySelectorAll('.overtime-table table tbody td:first-child input')?.forEach(item => {
+            item.addEventListener('change', () => {
+                let selectedKey = item.getAttribute("my-data");
+                if (selectedData.indexOf(selectedKey) == -1) {
+                    selectedData.push(selectedKey);
+                    if (selectedData.length == 1) {
+                        document.querySelector('.overtime-toolbar-hide').style.display = 'flex';
+                        document.querySelector('.overtime-toolbar-show').style.display = 'none';
+                    }
+                } else {
+                    selectedData = selectedData.filter(item => item !== selectedKey);
+                    if (selectedData.length == 0) {
+                        document.querySelector('.overtime-toolbar-hide').style.display = 'none';
+                        document.querySelector('.overtime-toolbar-show').style.display = 'flex';
+                    }
+                }
+                document.querySelector('.selectedItem').innerHTML = selectedData.length;
+            });
+        });
+
+        let searchQuery = '';
+
+        // Xử lý tìm kiếm - nnhiep
+        document.querySelector('.overtime-search')?.addEventListener('change', (e) => {
+            window.location.href = `/OvertimeManager?pageIndex=1&pageSize=${@Model.pageSize}&searchQuery=${e.target.value}&status=${@Model.status}`;
+        });
+
+        let overtimeDeleteId = '';
+
+        // Xử lý click xóa - nnhiep
+        document.querySelectorAll('.overtime-action.delete').forEach(item => {
+            item.addEventListener('click', (e) => {
+                overtimeDeleteId = e.target.getAttribute("data-overtimeId");
+                let modalBody = document.querySelector('#deleteModal .modal-body');
+                modalBody.innerHTML = `Are you sure to delete <b>${e.target.getAttribute("data-employee")}</b>'s overtime?`;
+            })
+        });
+
+        let myData = @Html.Raw(Json.Serialize(temp));
+
+        // Xử lý xóa thành công - nnhiep
+        document.querySelector(".dialog-btn-close").onclick = function () {
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/deleteById/' + overtimeDeleteId,
+                method: 'DELETE',
+                success: function (data) {
+                    let isValid = true;
+                    myData?.forEach(item => {
+                        if (item.overTimeId == overtimeDeleteId) {
+                            if (item.statusOvertime == 1) {
+                                isValid = false;
+                                window.location.href = 'https://localhost:7251/Home/DontHavePermission';
+                            }
+                        }
+                    });
+                    if(isValid) window.location.href = 'https://localhost:7251/OvertimeManager';
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl)
+            })
+            $('#deleteModal').modal('hide');
+            toastList.forEach(toast => toast.show());
+        }
+
+        // Lắng nghe sự kiện click export
+        document.querySelector('.btn-overtime-export').addEventListener('click', () => {
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/GetExcelFile',
+                method: 'GET',
+                success: function (data) {
+                    setTimeout(() => {
+                        window.location.href = 'https://localhost:7251/OvertimeManager';
+                    }, 800);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        })
+
+        // Click toolbar ẩn export
+        document.querySelector('.btn-hide-export').addEventListener('click', () => {
+            console.log(123)
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/GetExcelFileOption',
+                method: 'POST',
+                data: JSON.stringify(selectedData),
+                contentType: 'application/json',
+                success: function (data) {
+                    setTimeout(() => {
+                        window.location.href = 'https://localhost:7251/OvertimeManager';
+                    }, 800);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        })
+
+        // Click toolbar ẩn delete
+        document.querySelector('.btn-hide-delete').addEventListener('click', () => {
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/bulk/delete',
+                method: 'POST',
+                data: JSON.stringify(selectedData),
+                contentType: 'application/json',
+                success: function (data) {
+                    window.location.href = 'https://localhost:7251/OvertimeManager';
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        })
+    
+        // Click toolbar ẩn Refuse
+        document.querySelector('.btn-hide-refuse').addEventListener('click', () => {
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/ConvertToRefuse',
+                method: 'POST',
+                data: JSON.stringify(selectedData),
+                contentType: 'application/json',
+                success: function (data) {
+                    window.location.href = 'https://localhost:7251/OvertimeManager';
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        })
+
+        // Click toolbar ẩn Approve
+        document.querySelector('.btn-hide-approve').addEventListener('click', () => {
+            $.ajax({
+                url: 'https://localhost:7251/api/OvertimeAPI/ConvertToApprove',
+                method: 'POST',
+                data: JSON.stringify(selectedData),
+                contentType: 'application/json',
+                success: function (data) {
+                    window.location.href = 'https://localhost:7251/OvertimeManager';
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        })
+    </script>
+}

@@ -1,0 +1,107 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.bundle.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.bundle.js.map" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.bundle.min.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.bundle.min.js.map" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.esm.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.esm.js.map" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.esm.min.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.esm.min.js.map" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.js.map" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.min.js" />
+    <Content Remove="wwwroot\assets\components\register\js\bootstrap.min.js.map" />
+    <Content Remove="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.css.map" />
+    <Content Remove="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.min.css.map" />
+    <Content Remove="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.rtl.css.map" />
+    <Content Remove="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.rtl.min.css.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\assets\css\main.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="ViewComponents\" />
+    <Folder Include="Views\Shared\Components\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap-grid.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\assets\components\crud_table\fonts\flexslider-icon.svg" />
+    <None Include="wwwroot\assets\components\crud_table\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\assets\components\crud_table\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\assets\components\crud_table\fonts\slick.svg" />
+    <None Include="wwwroot\assets\components\crud_table\font_icon\flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.js" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.min.js" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.min.map" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.slim.js" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.slim.min.js" />
+    <None Include="wwwroot\assets\components\crud_table\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.js" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.js.map" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.min.js" />
+    <None Include="wwwroot\assets\components\crud_table\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-grid.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-grid.rtl.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-grid.rtl.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-reboot.rtl.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-reboot.rtl.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-utilities.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-utilities.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-utilities.rtl.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap-utilities.rtl.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.bundle.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.esm.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.esm.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.esm.min.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.min.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.min.js" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.min.js.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.rtl.css.map" />
+    <None Include="wwwroot\assets\lib\bootstrap_v5.3\bootstrap.rtl.min.css.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="6.2.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.5" />
+    <PackageReference Include="X.PagedList" Version="8.4.6" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.5" />
+  </ItemGroup>
+
+</Project>

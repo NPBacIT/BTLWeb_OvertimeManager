@@ -1,0 +1,57 @@
+﻿.overtime-container-add .form-group + .form-group {
+    margin-top: 14px;
+}
+
+.overtime-container-add label {
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.overtime-container-add .form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.overtime-container-add .flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.overtime-container-add .form-group label {
+    width: 40%;
+}
+
+.overtime-container-add .form-group .flex-col {
+    width: 60%;
+}
+
+.overtime-below-right button {
+    margin-top: 10px;
+}
+
+.overtime-content-detail form {
+    width: 100% !important;
+}
+
+.overtime-content-row {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.overtime-container-add .overtime-content-left,
+.overtime-container-add .overtime-content-right {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.btn-submit-add {
+    margin-top: 20px !important;
+    width: 100% !important;
+}
+
+.btn-submit-add input {
+    width: 100% !important;
+}

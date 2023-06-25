@@ -1,0 +1,127 @@
+﻿.overtime-main {
+    background-color: var(--color-gallery) !important;
+    width: 100%;
+    overflow: auto;
+    height: calc(100vh - var(--header-height)) !important;
+}
+
+.overtime-wrapper {
+    height: calc(100%) !important;
+}
+
+.overtime-heading {
+    width: 100%;
+    height: 54px !important;
+}
+
+.overtime-container-detail {
+    width: 100%;
+    padding: 16px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-white);
+    overflow: auto;
+    height: calc(100vh - var(--header-height) - 32px - 54px);
+    box-shadow: 0px 1px 8px 1px rgba(0, 0, 0, 0.1);
+}
+
+.overtime-content-detail {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    margin-bottom: 40px;
+}
+
+.btn-add {
+    position: relative;
+}
+
+.btn-add span {
+    margin: 0 4px;
+}
+
+.overtime-content-left,
+.overtime-content-right {
+    width: 44%;
+}
+
+.overtime-field {
+    display: flex;
+}
+
+.overtime-field label {
+    width: 40%;
+    font-weight: 600;
+}
+
+.overtime-field label + .form-select,
+.overtime-field label + .form-control {
+    width: 55%;
+}
+
+.overtime-field p:last-child {
+    width: 60%;
+    text-align: left;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--color-silver);
+}
+
+.heading-left i:first-child {
+    cursor: pointer;
+}
+
+.heading-left {
+    display: flex;
+    align-items: center;
+}
+
+.heading-left a {
+    color: var(--color-black);
+    text-decoration: none;
+}
+
+.heading-left .heading-title {
+    margin-left: 18px;
+}
+
+.details-status.approved {
+    color: var(--color-mountain-meadow);
+    border: 1px solid var(--color-mountain-meadow);
+    background-color: var(--color-ice-cold);
+    border-radius: 4px;
+    padding: 6px 16px;
+}
+
+.details-status.refused {
+    background-color: var(--color-bridesmaid);
+    border: 1px solid var(--color-omegranate);
+    color: var(--color-omegranate);
+    border-radius: 4px;
+    padding: 6px 16px;
+}
+
+.details-status.pending {
+    color: var(--color-royal-blue);
+    border: 1px solid var(--color-royal-blue);
+    background-color: var(--color-selago);
+    border-radius: 4px;
+    padding: 6px 16px;
+}
+
+.btn-text {
+    margin-left: 10px !important;
+}
+
+.overtime-details-search {
+    width: 320px;
+    margin: 10px 0 20px;
+}
+
+.overtime-content-below span:first-child {
+    font-weight: 600;
+}
+
+.content-below-data {
+    font-style: italic;
+}

@@ -1,0 +1,175 @@
+﻿@using Microsoft.AspNetCore.Html;
+@using OVERTIME.MANAGER.MAIN.ViewModels;
+@using OVERTIME.MANAGER.MAIN.Utils.Enums;
+@model OVERTIME.MANAGER.MAIN.Models.Overtime
+
+@{
+    ViewData["Title"] = "Overtime Update";
+    Layout = "~/Views/Shared/_LayoutDefault.cshtml";
+    var navigatorActive = new NavigatorActive { navigatorActive = "Index" };
+    OvertimeManagerContext db = new OvertimeManagerContext();
+    var temp = db.Employees.ToList();
+}
+
+@section header
+    {
+    <partial name="~/Views/OvertimeManager/_HeaderOM.cshtml" model="navigatorActive" />
+}
+
+@section link {
+    <link rel="stylesheet" href="../assets/components/overtime_update/css/style.css" />
+}
+
+<main class="container-fluid overtime-main">
+    <div class="overtime-wrapper py-3">
+        <!-- Heading -->
+        <div class="overtime-heading d-flex align-items-center justify-content-between pb-3">
+            <div class="heading-left">
+                <a asp-action="OvertimeDetail" asp-controller="OvertimeManager" asp-route-overtimeId="@Model.OverTimeId"><i class="fa-solid fa-arrow-left"></i></a>
+                <div class="fs-5 fw-bold heading-title"> Overtime Update</div>
+            </div>
+            <div class="btn-group-wrapper">
+                <a type="button" class="btn btn-danger btn-add" asp-controller="OvertimeManager" asp-action="Index">
+                    <span>Cancel</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="overtime-container-detail overtime-container-add">
+            <form asp-action="OvertimeUpdate" asp-route-isDuplicate="@ViewBag.isDuplicate" method="POST">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="overtime-content-detail">
+                    <div class="overtime-content-row row justify-content-between">
+                        <div class="overtime-content-left">
+                            <div class="form-group">
+                                <input hidden asp-for="OverTimeId" class="form-control" />
+                                <label asp-for="EmployeeName">Employee Name<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <select asp-for="EmployeeId" class="form-control dropdown-employee" asp-items="ViewBag.Employees"></select>
+                                    <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input hidden asp-for="OrganizationId" class="form-control textbox-organization-id" />
+                                <label asp-for="OrganizationName">Organization Name</label>
+                                <div class="flex-col">
+                                    <input readonly asp-for="OrganizationName" class="form-control textbox-organization" />
+                                    <span asp-validation-for="OrganizationName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ApplyDate">Apply Date<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <input asp-for="ApplyDate" class="form-control" />
+                                    <span asp-validation-for="ApplyDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FromDate">From Date<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <input asp-for="FromDate" class="form-control" />
+                                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="BreakTimeFrom">Breaktime From</label>
+                                <div class="flex-col">
+                                    <input asp-for="BreakTimeFrom" class="form-control" />
+                                    <span asp-validation-for="BreakTimeFrom" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="BreakTimeTo">Breaktime To</label>
+                                <div class="flex-col">
+                                    <input asp-for="BreakTimeTo" class="form-control" />
+                                    <span asp-validation-for="BreakTimeTo" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ToDate">To Date<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <input asp-for="ToDate" class="form-control" />
+                                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="WorkingShiftName">Workingshift<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <select asp-for="WorkingShiftId" class="form-control" asp-items="ViewBag.WorkingShifts"></select>
+                                    <span asp-validation-for="WorkingShiftId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="OverTimeInWorkingShiftName">Overtime Workingshift<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <select asp-for="OverTimeInWorkingShiftId" class="form-control" asp-items="ViewBag.OWs"></select>
+                                    <span asp-validation-for="OverTimeInWorkingShiftId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overtime-content-right">
+                            <div class="form-group">
+                                <label asp-for="Reason">Reason<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <textarea asp-for="Reason" class="form-control"></textarea>
+                                    <span asp-validation-for="Reason" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ApprovalName">Approval Name<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <select asp-for="ApprovalId" class="form-control" asp-items="ViewBag.Approvals"></select>
+                                    <span asp-validation-for="ApprovalId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="StatusOvertime">Status<span class="required">*</span></label>
+                                <div class="flex-col">
+                                    <select asp-for="StatusOvertime" class="form-control" asp-items="ViewBag.StatusOvertimes"></select>
+                                    <span asp-validation-for="StatusOvertime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Dsc">Description</label>
+                                <div class="flex-col">
+                                    <input asp-for="Dsc" class="form-control" />
+                                    <span asp-validation-for="Dsc" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group btn-submit-add">
+                                <input type="submit" value="Save changes" class="btn btn-primary btn-add" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="overtime-content-below">
+            </div>
+        </div>
+    </div>
+</main>
+
+@section script {
+    <script>
+        let data = @Html.Raw(Json.Serialize(temp));
+        let dropdownEmployee = document.querySelector('.dropdown-employee');
+
+        // Binding lúc mới vào màn - nnhiep
+        bindingOrganization(dropdownEmployee.value);
+
+        // Lắng nghe thay đổi người nộp đơn và binding dữ liệu cho Organization - nnhiep
+        dropdownEmployee?.addEventListener('change', (e) => { bindingOrganization(e.target.value); })
+
+        // Hàm binding dữ liệu - nnhiep
+        function bindingOrganization(temp) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].employeeId == temp) {
+                    document.querySelector('.textbox-organization').value = data[i].organizationName;
+                    document.querySelector('.textbox-organization-id').value = data[i].organizationId;
+                    break;
+                }
+            }
+        }
+    </script>
+}
