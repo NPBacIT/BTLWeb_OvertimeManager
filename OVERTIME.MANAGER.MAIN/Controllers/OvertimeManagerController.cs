@@ -23,7 +23,7 @@ namespace OVERTIME.MANAGER.MAIN.Controllers
         /// <param name="searchQuery">Giá trị tìm kiếm</param>
         /// <param name="status">Trạng thái đơn làm thêm</param>
         /// <returns>Danh sách đơn làm thêm thỏa mãn điều kiện lọc</returns>
-        /// @author nnhiep 20.03.2023
+        ///
         [Authentication]
         public IActionResult Index(string searchQuery = "", int pageIndex = 1, int pageSize = 15, Byte status = 3)
         {
@@ -71,7 +71,7 @@ namespace OVERTIME.MANAGER.MAIN.Controllers
         /// Chi tiết đơn làm thêm
         /// </summary>
         /// <param name="overtimeId">ID đơn làm thêm</param>
-        /// @author nnhiep
+        /// 
         [Authentication]
         public IActionResult OvertimeDetail(string overtimeId)
         {
@@ -83,7 +83,7 @@ namespace OVERTIME.MANAGER.MAIN.Controllers
         /// <summary>
         /// Thêm đơn làm thêm mới
         /// </summary>
-        /// @author nnhiep
+        /// 
         [HttpGet]
         [Authentication]
         public IActionResult OvertimeAdd()
@@ -251,7 +251,7 @@ namespace OVERTIME.MANAGER.MAIN.Controllers
         /// </summary>
         /// <param name="item">Dropdown cần lấy</param>
         /// <returns>Danh sách các giá trị của dropdown</returns>
-        /// @author nnhiep
+        
         public SelectList GetSelectListItems(SelectedItem item)
         {
             SelectList items;
@@ -309,7 +309,7 @@ namespace OVERTIME.MANAGER.MAIN.Controllers
         /// Quản lý ca làm việc
         /// </summary>
         /// <returns>View</returns>
-        /// @author nnhiep 15.03.2023
+        /// @author npbac 15.03.2023
         [Authentication]
         public IActionResult WorkingShiftManager(string SearchText = "", int page = 1)
         {
